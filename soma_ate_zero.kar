@@ -1,0 +1,13 @@
+void main () {
+    newVar integer soma;
+    newVar integer valor;
+
+    soma = 0;
+    valor = System.readint();
+    
+    repeat {
+        soma = (soma + valor); 
+    } until ((valor == 0));
+
+    System.output(valor);
+}
