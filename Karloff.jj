@@ -65,7 +65,7 @@ void Karloff () :
 {Token t;}
 {
 
-  Main() Func()? <EOF>
+  Main() Func() <EOF>
 
 }
 
@@ -116,14 +116,30 @@ void SeqComandos () :
 void Comando () :
 {}
 {
-    <ID> <CATRIB> Exp()
-  | <ID> <APAR> ListaExp()? <FPAR>
+    <ID> ComID()
   | <CIF> <APAR> Exp() <FPAR> <CTHEN> <ACHAVES> <FCHAVES>
   | <CWHILE> <APAR> Exp() <FPAR> <ACHAVES> SeqComandos() <FCHAVES>
   | <CREP> <ACHAVES> SeqComandos() <FCHAVES> <CUNT> <APAR> Exp() <FPAR>
   | <CRET> Exp()
   | <CPRINT> <APAR> Exp() <FPAR>
-  | <ID> <CATRIB> <CREADINT> <APAR> <FPAR>
+
+}
+
+void ComID () :
+{}
+{
+
+    <CATRIB> ComIDAtrib()
+  | <APAR> ListaExp() <FPAR>
+
+}
+
+void ComIDAtrib () :
+{}
+{
+
+    Exp()
+  | <CREADINT> <APAR> <FPAR>
 
 }
 
@@ -142,8 +158,7 @@ void Fator () :
 {}
 {
 
-    <ID> 
-  | <ID> <APAR> ListaExp()? <FPAR>
+    <ID> [<APAR> ListaExp() <FPAR>]
   | <NUM>
   | <BTRUE>
   | <BFALSE>
@@ -164,7 +179,15 @@ void ListaExp () :
 {}
 {
 
-    Exp() (<COMMA> ListaExp())*
+    Exp() ListaExpL()
+
+}
+
+void ListaExpL () :
+{}
+{
+
+  (<COMMA> ListaExpL())*
 
 }
 
@@ -174,7 +197,15 @@ void Func () :
 {}
 {
 
-  |  
-  | <FUNC> Tipo() <ID> <APAR> ListaArg()? <FPAR> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
+  (<FUNC> Tipo() <ID> <APAR> ListaArg() <FPAR> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)*
+
+}
+
+// LISTAARG -> TIPO TOKEN_id | LISTAARG "," TIPO TOKEN_id
+void ListaArg () :
+{}
+{
+
+    (Tipo() <ID> (<COMMA> Tipo() <ID>)*)*
 
 }

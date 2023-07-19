@@ -1,17 +1,19 @@
 void main () {
 	newVar integer times;
 	newVar integer output;
-	System.readint(times);	
+	times = System.readint();	
 	output = fib(times);
-	System.output(output)
+	System.output(output);
 }
 
-integer func fib (integer times) {
-	newVar integer result = 1;
-	newVar integer past = result;
-	while (times > 1) {
-		result = result + past;
+func integer fib (integer times) {
+	newVar integer result;
+	newVar integer past;
+	result = 1;
+	past = result;
+	while ((times > 1)) {
+		result = (result + past);
 		past = result;
-		times = times - 1;
-	}
+		times = (times - 1);
+	};
 }

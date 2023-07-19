@@ -1,7 +1,7 @@
 void main () {
-    newVar integer 3teste_12a;
+    newVar integer teste_12a;
     newVar bool comp;
     teste_12a = 9.2E1;
-    comp = teste_12a == 10;
-    System.output (teste);
+    comp = (teste_12a == 10);
+    System.output (comp);
 }
