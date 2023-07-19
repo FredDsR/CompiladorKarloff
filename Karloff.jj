@@ -1,0 +1,180 @@
+PARSER_BEGIN(Karloff)
+
+import java.io.*;
+
+public class Karloff {
+    public static void main(String args[]) throws ParseException,IOException {
+        Karloff analisador = new Karloff(new FileInputStream(args[0]));
+        analisador.Karloff();
+    }
+}
+
+PARSER_END(Karloff)
+
+SKIP :
+{
+
+  " "
+| "\t"
+| "\n"
+| "\r"
+
+}
+
+TOKEN :
+{
+
+  <MAIN: "main">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <VOID: "void">
+| <APAR: "(">
+| <FPAR: ")">
+| <NEWVAR: "newVar">
+| <SEMICOLON: ";">
+| <COMMA: ",">
+| <TINT: "integer">
+| <TBOOL: "bool">
+| <CATRIB: "=">
+| <CIF: "if">
+| <CTHEN: "then">
+| <CWHILE: "while">
+| <CREP: "repeat">
+| <CUNT: "until">
+| <CRET: "return">
+| <CPRINT: "System.output">
+| <CREADINT: "System.readint">
+| <BTRUE: "true">
+| <BFALSE: "false">
+| <FUNC: "func">
+
+}
+
+TOKEN :
+{
+
+  <OP: "+" | "-" | "*"| "/" | "&" | "|" | "<" | ">" | "==">
+| <ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","0"-"9"])* ("_" (["a"-"z","A"-"Z","0"-"9"])+)*>          
+| <NUM: (["0"-"9"])+ ( "." (["0"-"9"])+ )? ("E" ("+"|"-")? (["0"-"9"])+)?>
+
+}
+
+
+// KARLOFF -> MAIN FUNC?
+void Karloff () :
+{Token t;}
+{
+
+  Main() Func()? <EOF>
+
+}
+
+// MAIN -> "void" "main" "(" ")" "{" VARDECL SEQCOMANDOS "}"
+void Main () : 
+{}
+{
+
+  <VOID> <MAIN> <APAR> <FPAR> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
+
+}
+
+// VARDECL -> VARDECL "newVar" TIPO TOKEN_id ";" | vazio
+void VarDecl () :
+{}
+{
+
+  (<NEWVAR> Tipo() <ID> <SEMICOLON>)*
+
+}
+
+// TIPO -> "integer" | "bool"
+void Tipo() :
+{}
+{
+
+  <TBOOL> | <TINT>
+
+}
+
+// SEQCOMANDOS -> SEQCOMANDOS COMANDO | vazio
+void SeqComandos () :
+{}
+{
+
+  (Comando() <SEMICOLON>)*
+
+}
+
+// COMANDO -> TOKEN_id "=" EXP ";"
+// | TOKEN_id "(" LISTAEXP? ")" ";"
+// | "if" "(" EXP ")" "then" "{" SEQCOMANDOS "}" ";"
+// | "while" "(" EXP ")" "{" SEQCOMANDOS "}" ";"
+// | "repeat" "{" SEQCOMANDOS "}" "until" "(" EXP ")"
+// | "return" EXP ";"
+// | "System.output" "(" EXP ")" ";"
+// | TOKEN_id "=" "System.readint" "(" ")" ";"
+void Comando () :
+{}
+{
+    <ID> <CATRIB> Exp()
+  | <ID> <APAR> ListaExp()? <FPAR>
+  | <CIF> <APAR> Exp() <FPAR> <CTHEN> <ACHAVES> <FCHAVES>
+  | <CWHILE> <APAR> Exp() <FPAR> <ACHAVES> SeqComandos() <FCHAVES>
+  | <CREP> <ACHAVES> SeqComandos() <FCHAVES> <CUNT> <APAR> Exp() <FPAR>
+  | <CRET> Exp()
+  | <CPRINT> <APAR> Exp() <FPAR>
+  | <ID> <CATRIB> <CREADINT> <APAR> <FPAR>
+
+}
+
+// EXP -> "(" EXP OP EXP ")" | FATOR
+void Exp () :
+{}
+{
+  <APAR> Exp() Op() Exp() <FPAR> | Fator()
+}
+
+
+// FATOR -> TOKEN_id | TOKEN_id "(" LISTAEXP? ")"
+// | TOKEN_numliteral |
+// "true" | "false"
+void Fator () :
+{}
+{
+
+    <ID> 
+  | <ID> <APAR> ListaExp()? <FPAR>
+  | <NUM>
+  | <BTRUE>
+  | <BFALSE>
+
+}
+
+// OP -> "+" | "-" | "*" | "/" | "&" | "|" | "<" | ">" | "=="
+void Op () :
+{}
+{
+
+  <OP>
+
+}
+
+// LISTAEXP -> EXP | LISTAEXP "," EXP
+void ListaExp () :
+{}
+{
+
+    Exp() (<COMMA> ListaExp())*
+
+}
+
+// FUNC -> FUNC "func" TIPO TOKEN_id "(" LISTAARG? ")" "{" VARDECL SEQCOMANDOS "}"
+// | "func" TIPO TOKEN_id "(" LISTAARG? ")" "{" VARDECL SEQCOMANDOS "}"
+void Func () :
+{}
+{
+
+  |  
+  | <FUNC> Tipo() <ID> <APAR> ListaArg()? <FPAR> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
+
+}

@@ -1,0 +1,17 @@
+void main () {
+	newVar integer times;
+	newVar integer output;
+	System.readint(times);	
+	output = fib(times);
+	System.output(output)
+}
+
+integer func fib (integer times) {
+	newVar integer result = 1;
+	newVar integer past = result;
+	while (times > 1) {
+		result = result + past;
+		past = result;
+		times = times - 1;
+	}
+}
