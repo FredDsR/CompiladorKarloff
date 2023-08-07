@@ -3,9 +3,9 @@ void main () {
     newVar integer valor;
 
     soma = 0;
-    valor = System.readint();
     
     repeat {
+        valor = System.readint();
         soma = (soma + valor); 
     } until ((valor == 0));
 
