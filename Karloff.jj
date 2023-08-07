@@ -179,7 +179,7 @@ void ListaExp () :
 {}
 {
 
-    Exp() ListaExpL()
+    Exp() [ListaExpL()]
 
 }
 
@@ -187,7 +187,7 @@ void ListaExpL () :
 {}
 {
 
-  (<COMMA> ListaExpL())*
+  <COMMA> Exp() [ListaExpL()]
 
 }
 
