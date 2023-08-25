@@ -16,4 +16,5 @@ func integer fib (integer times) {
 		past = result;
 		times = (times - 1);
 	};
+	return result;
 }

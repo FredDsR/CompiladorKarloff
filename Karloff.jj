@@ -8,16 +8,28 @@ class Tipo {
   Tipo(String tipo){
     this.tipo = tipo;
   }
+
+  public String toString() {
+    return this.tipo;
+  }
 }
 
 class Fator {}
 
 class True extends Fator {
   String value = "True";
+
+  public String toString() {
+    return this.value;
+  }
 }
 
 class False extends Fator {
   String value = "False";
+
+  public String toString() {
+    return this.value;
+  }
 }
 
 class Num extends Fator {
@@ -26,6 +38,10 @@ class Num extends Fator {
   Num(String num) {
     this.num = num;
   }
+
+  public String toString() {
+    return this.num;
+  }
 }
 
 class Variavel extends Fator{
@@ -33,6 +49,10 @@ class Variavel extends Fator{
 
   Variavel(String id){
     this.id = id;
+  }
+
+  public String toString() {
+    return this.id;
   }
 }
 
@@ -44,6 +64,10 @@ class FuncaoCall extends Fator{
     this.id = id;
     this.listaExp = listaExp;
   }
+
+  public String toString() {
+    return this.id + "(" + this.listaExp.toString() +")";
+  }
 }
 
 class Operador {
@@ -51,6 +75,17 @@ class Operador {
 
   Operador(String op){
     this.op = op;
+  }
+
+  public String toString() {
+    switch (this.op) {
+      case "&":
+        return "and";
+      case "|":
+        return "or";
+      default:
+        return this.op;
+    }
   }
 }
 
@@ -65,6 +100,10 @@ class Operacao extends Expressao {
     this.expEsq = expEsq;
     this.expDir = expDir;
   }
+
+  public String toString() {
+    return this.expEsq.toString() + " " + this.operador.toString() + " " + this.expDir.toString();
+  }
 }
 
 class FinalExpressao extends Expressao {
@@ -73,9 +112,33 @@ class FinalExpressao extends Expressao {
   FinalExpressao(Fator fator){
     this.fator = fator;
   }
+
+  public String toString() {
+    return this.fator.toString();
+  }
 }
 
-class Comando {}
+class Comando {
+  int indent = 0;
+
+  public void setIndent(int indent){
+    this.indent = indent;
+  }
+
+  public int getIndent() {
+    return indent;
+  }
+
+  public String getTabs() {
+    String tabs = "";
+    
+    for (int i = 0; i < this.indent; i++){
+      tabs = tabs.concat("\t");
+    }
+
+    return tabs;
+  }
+}
 
 class Atrib extends Comando {
   String id;
@@ -88,11 +151,19 @@ class AtribExp extends Atrib {
     this.id = id;
     this.exp = exp;
   }
+
+  public String toString() {
+    return this.getTabs() + this.id + " = " + this.exp.toString();
+  }
 }
 
 class AtribInput extends Atrib {
   AtribInput(String id) {
     this.id = id;
+  }
+
+  public String toString() {
+    return this.getTabs() + this.id + " = input()";
   }
 }
 
@@ -104,6 +175,18 @@ class If extends Comando {
     this.teste = teste;
     this.comandos = comandos;
   }
+
+  public String toString() {
+    
+    String bloco = this.getTabs() + "if " + this.teste.toString() + ":\n";
+
+    for (Comando comando : this.comandos) {
+      comando.setIndent(this.getIndent() + 1);
+      bloco = bloco.concat(comando.toString() + "\n");
+    }
+
+    return bloco;
+  }
 }
 
 class While extends Comando {
@@ -113,6 +196,17 @@ class While extends Comando {
   While(Expressao teste, ArrayList<Comando> comandos){
     this.teste = teste;
     this.comandos = comandos;
+  }
+
+  public String toString() {
+    String bloco = this.getTabs() + "while " + this.teste.toString() + ":\n";
+
+    for (Comando comando : this.comandos) {
+      comando.setIndent(this.getIndent() + 1);
+      bloco = bloco.concat(comando.toString() + "\n");
+    }
+
+    return bloco;
   }
 }
 
@@ -124,6 +218,17 @@ class Repeat extends Comando {
     this.teste = teste;
     this.comandos = comandos;
   }
+  
+  public String toString() {
+    String bloco = this.getTabs() + "while not " + this.teste.toString() + ":\n";
+    
+    for (Comando comando : this.comandos) {
+      comando.setIndent(this.getIndent() + 1);
+      bloco = bloco.concat(comando.toString() + "\n");
+    }
+
+    return bloco;
+  }
 }
 
 class Return extends Comando {
@@ -131,6 +236,10 @@ class Return extends Comando {
 
   Return(Expressao exp){
     this.exp = exp;
+  }
+
+  public String toString() {
+    return this.getTabs() + "return " + this.exp.toString();
   }
 }
 
@@ -140,6 +249,10 @@ class Print extends Comando {
   Print(Expressao exp){
     this.exp = exp;
   }
+
+  public String toString() {
+    return this.getTabs() + "print(" + this.exp.toString() + ")";
+  }
 }
 
 class FuncaoCallCom extends Comando {
@@ -147,6 +260,10 @@ class FuncaoCallCom extends Comando {
 
   FuncaoCallCom(FuncaoCall funcaoCall){
     this.funcaoCall = funcaoCall;
+  }
+
+  public String toString() {
+    return this.getTabs() + this.funcaoCall.toString();
   }
 }
 
@@ -158,6 +275,17 @@ class Main {
     this.variaveis = variaveis;
     this.comandos = comandos;
   }
+
+  public String toString() {
+    String bloco = "";
+    
+    for (Comando comando : this.comandos) {
+      comando.setIndent(0);
+      bloco = bloco.concat(comando.toString() + "\n");
+    }
+    
+    return bloco;
+  }
 }
 
 class Argumento {
@@ -168,14 +296,18 @@ class Argumento {
     this.nome = nome;
     this.tipo = tipo;
   }
+
+  public String toString() {
+    return this.nome.toString() + ": " + tipo.toString();
+  }
 }
 
 class Funcao {
   String nome;
   Tipo tipo_retorno;
-  ArrayList <Argumento> argumentos;
-  ArrayList <Variavel> variaveis;
-  ArrayList <Comando> comandos;
+  ArrayList<Argumento> argumentos;
+  ArrayList<Variavel> variaveis;
+  ArrayList<Comando> comandos;
 
   Funcao(String nome, Tipo tipo_retorno, ArrayList<Argumento> argumentos, ArrayList<Variavel> variaveis, ArrayList<Comando> comandos){
     this.nome = nome;
@@ -185,6 +317,30 @@ class Funcao {
     this.comandos = comandos;
   }
 
+  public String toString() {
+    String bloco = "def " + this.nome + "(";
+
+    if (!this.argumentos.isEmpty()) {
+      
+      Argumento first = this.argumentos.remove(0);
+      bloco = bloco.concat(first.toString());
+      
+      for (Argumento argumento : this.argumentos) {
+        bloco = bloco.concat("," + argumento.toString());
+      }
+
+      argumentos.add(0, first);
+    }
+
+    bloco = bloco.concat(") -> " + this.tipo_retorno.toString() + ":\n");
+
+    for (Comando comando : this.comandos) {
+      comando.setIndent(1);
+      bloco = bloco.concat(comando.toString() + "\n");
+    }
+    
+    return bloco;
+  }
 }
 
 class ArvoreKarloff {
@@ -196,6 +352,15 @@ class ArvoreKarloff {
     this.funcoes = funcoes;
   }
 
+  public String toString() {
+    String bloco = this.main.toString() + "\n";
+    
+    for (Funcao funcao : this.funcoes) {
+      bloco = bloco.concat(funcao.toString() + "\n");
+    }
+    
+    return bloco;
+  }
 }
 
 public class Karloff {
@@ -217,7 +382,7 @@ public class Karloff {
   }
 
   public static void geraCodigo(ArvoreKarloff prog, String arquivo){
-
+    System.out.println(prog.toString());
   }
 }
 
@@ -299,7 +464,7 @@ Main MainC () :
 }
 
 // VARDECL -> VARDECL "newVar" TIPO TOKEN_id ";" | vazio
-void VarDecl (ArrayList variaveis) :
+void VarDecl (ArrayList<Variavel> variaveis) :
 {
   Token t;
 }
@@ -319,7 +484,7 @@ Tipo Tipo() :
 }
 
 // SEQCOMANDOS -> SEQCOMANDOS COMANDO | vazio
-void SeqComandos (ArrayList comandos) :
+void SeqComandos (ArrayList<Comando> comandos) :
 {
   Comando c;
 }
@@ -392,7 +557,7 @@ Expressao Exp () :
   Fator f;
 }
 {
-    <APAR> expEsq=Exp() op=Op() expEsq=Exp() <FPAR> 
+    <APAR> expEsq=Exp() op=Op() expDir=Exp() <FPAR> 
     {return new Operacao(op, expEsq, expDir);}
   | f=Fator()
     {return new FinalExpressao(f);}
@@ -409,7 +574,7 @@ Fator Fator () :
 }
 {
     t=<ID> [<APAR> ListaExp(listaExp) <FPAR> 
-            {return FuncaoCall(t.image, listaExp);}]
+            {return new FuncaoCall(t.image, listaExp);}]
     {return new Variavel(t.image);}
   |  t=<NUM>
     {
@@ -430,7 +595,7 @@ Operador Op () :
 }
 
 // LISTAEXP -> EXP | LISTAEXP "," EXP
-void ListaExp (ArrayList listaExp) :
+void ListaExp (ArrayList<Expressao> listaExp) :
 {
   Expressao exp;
 }
@@ -440,7 +605,7 @@ void ListaExp (ArrayList listaExp) :
 
 }
 
-void ListaExpL (ArrayList listaExp) :
+void ListaExpL (ArrayList<Expressao> listaExp) :
 {
   Expressao exp;
 }
@@ -452,7 +617,7 @@ void ListaExpL (ArrayList listaExp) :
 
 // FUNC -> FUNC "func" TIPO TOKEN_id "(" LISTAARG? ")" "{" VARDECL SEQCOMANDOS "}"
 // | "func" TIPO TOKEN_id "(" LISTAARG? ")" "{" VARDECL SEQCOMANDOS "}"
-void Func (ArrayList funcoes) :
+void Func (ArrayList<Funcao> funcoes) :
 {
   Tipo tipo_retorno;
   Token t;
@@ -470,7 +635,7 @@ void Func (ArrayList funcoes) :
 }
 
 // LISTAARG -> TIPO TOKEN_id | LISTAARG "," TIPO TOKEN_id
-void ListaArg (ArrayList argumentos) :
+void ListaArg (ArrayList<Argumento> argumentos) :
 {
   Token t;
   Tipo tipo;
