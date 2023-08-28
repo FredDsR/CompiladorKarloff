@@ -403,11 +403,27 @@ class ArvoreKarloff {
 
 public class Karloff implements KarloffConstants {
   public static void main(String args[]) throws Exception {
-    // abrir o arquivo passado por linha
-    // de comando contento o código em Karloff:
-    FileInputStream fs = new FileInputStream(new File(args[0]));
-    // pega nome do arquivo a ser gerado
-    String filename = new String(args[1]);
+    FileInputStream fs;
+    String filename = "script.py";
+
+    switch (args.length) {
+      case 0:
+        throw new Exception("There is no enough params. Template: java Karloff <source_filename.kar> <target_filename.py>");
+      case 1:
+        // abrir o arquivo passado por linha
+        // de comando contento o código em Karloff:
+        fs = new FileInputStream(new File(args[0]));
+        break;
+      case 2:
+        // abrir o arquivo passado por linha
+        // de comando contento o código em Karloff:
+        fs = new FileInputStream(new File(args[0]));
+        // pega nome do arquivo a ser gerado
+        filename = new String(args[1]);
+        break;
+      default:
+        throw new Exception("Too much params. Template: java Karloff <source_filename.kar> <target_filename.py>");
+    }
     // Instanciar o parser da linguagem Karloff passando
     // como argumento o arquivo contendo o código
     //Karloff a ser processado:
@@ -421,8 +437,22 @@ public class Karloff implements KarloffConstants {
     geraCodigo(arvore, filename);
   }
 
-  public static void geraCodigo(ArvoreKarloff prog, String filename){
-    System.out.println(filename + "\u005cn\u005cn" + prog.toString());
+  public static void geraCodigo(ArvoreKarloff prog, String filename) throws Exception {
+    // System.out.println(filename + "\n\n" + prog.toString());
+    File file = new File(filename);
+
+    boolean result;
+
+    result = file.createNewFile();  //creates a new file  
+
+    if(result) {
+      System.out.println("file created " + file.getCanonicalPath()); //returns the path string  
+    } else  {
+      System.out.println("File already exist at location: " + file.getCanonicalPath());
+    }
+
+    FileOutputStream outputStream = new FileOutputStream(file);
+    outputStream.write(prog.toString().getBytes());
   }
 
 // KARLOFF -> MAIN FUNC?
