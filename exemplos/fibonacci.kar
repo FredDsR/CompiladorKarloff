@@ -9,8 +9,12 @@ void main () {
 func integer fib (integer times) {
 	newVar integer result;
 	newVar integer past;
-	result = 1;
-	past = result;
+	result = 0;
+	past = 1;
+	if ((times == 1)) then {
+		return 0;
+	};
+	times = times - 1;
 	while ((times > 1)) {
 		result = (result + past);
 		past = result;

@@ -179,7 +179,7 @@ class AtribInput extends Atrib {
   }
 
   public String toString() {
-    return this.getTabs() + this.id + " = input()\u005cn";
+    return this.getTabs() + this.id + " = int(input())\u005cn";
   }
 }
 
