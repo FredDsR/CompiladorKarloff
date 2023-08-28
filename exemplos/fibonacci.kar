@@ -9,15 +9,17 @@ void main () {
 func integer fib (integer times) {
 	newVar integer result;
 	newVar integer past;
-	result = 0;
+	newVar integer last;
+	last = 1;
 	past = 1;
-	if ((times == 1)) then {
-		return 0;
+	result = 0;
+	if (((times == 1) | (times == 2))) then {
+		result = 1;
 	};
-	times = times - 1;
-	while ((times > 1)) {
-		result = (result + past);
-		past = result;
+	while ((times > 2)) {
+		result = (last + past);
+		past = last;
+		last = result;
 		times = (times - 1);
 	};
 	return result;

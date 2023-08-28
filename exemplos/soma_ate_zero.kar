@@ -3,11 +3,11 @@ void main () {
     newVar integer valor;
 
     soma = 0;
-    
+    valor = System.readint();
     repeat {
-        valor = System.readint();
         soma = (soma + valor); 
+        valor = System.readint();
     } until ((valor == 0));
 
-    System.output(valor);
+    System.output(soma);
 }
