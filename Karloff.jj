@@ -66,7 +66,23 @@ class FuncaoCall extends Fator{
   }
 
   public String toString() {
-    return this.id + "(" + this.listaExp.toString() +")";
+    String bloco = this.id + "(";
+    
+    if (!this.listaExp.isEmpty()) {
+      
+      Expressao first = this.listaExp.remove(0);
+      bloco = bloco.concat(first.toString());
+      
+      for (Expressao exp : this.listaExp) {
+        bloco = bloco.concat("," + exp.toString());
+      }
+
+      listaExp.add(0, first);
+    }
+
+    bloco = bloco + ")";
+
+    return bloco;
   }
 }
 
@@ -153,7 +169,7 @@ class AtribExp extends Atrib {
   }
 
   public String toString() {
-    return this.getTabs() + this.id + " = " + this.exp.toString();
+    return this.getTabs() + this.id + " = " + this.exp.toString() + "\n";
   }
 }
 
@@ -163,7 +179,7 @@ class AtribInput extends Atrib {
   }
 
   public String toString() {
-    return this.getTabs() + this.id + " = input()";
+    return this.getTabs() + this.id + " = input()\n";
   }
 }
 
@@ -182,7 +198,11 @@ class If extends Comando {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(this.getIndent() + 1);
-      bloco = bloco.concat(comando.toString() + "\n");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\n")){
+      bloco = bloco + "\n";
     }
 
     return bloco;
@@ -203,7 +223,11 @@ class While extends Comando {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(this.getIndent() + 1);
-      bloco = bloco.concat(comando.toString() + "\n");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\n")){
+      bloco = bloco + "\n";
     }
 
     return bloco;
@@ -224,7 +248,11 @@ class Repeat extends Comando {
     
     for (Comando comando : this.comandos) {
       comando.setIndent(this.getIndent() + 1);
-      bloco = bloco.concat(comando.toString() + "\n");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\n")){
+      bloco = bloco + "\n";
     }
 
     return bloco;
@@ -239,7 +267,7 @@ class Return extends Comando {
   }
 
   public String toString() {
-    return this.getTabs() + "return " + this.exp.toString();
+    return this.getTabs() + "return " + this.exp.toString() + "\n";
   }
 }
 
@@ -251,7 +279,7 @@ class Print extends Comando {
   }
 
   public String toString() {
-    return this.getTabs() + "print(" + this.exp.toString() + ")";
+    return this.getTabs() + "print(" + this.exp.toString() + ")\n";
   }
 }
 
@@ -263,7 +291,7 @@ class FuncaoCallCom extends Comando {
   }
 
   public String toString() {
-    return this.getTabs() + this.funcaoCall.toString();
+    return this.getTabs() + this.funcaoCall.toString() + "\n";
   }
 }
 
@@ -277,13 +305,17 @@ class Main {
   }
 
   public String toString() {
-    String bloco = "";
+    String bloco = "def main():\n";
     
     for (Comando comando : this.comandos) {
-      comando.setIndent(0);
-      bloco = bloco.concat(comando.toString() + "\n");
+      comando.setIndent(1);
+      bloco = bloco.concat(comando.toString());
     }
     
+    if (!bloco.endsWith("\n")){
+      bloco = bloco + "\n";
+    }
+
     return bloco;
   }
 }
@@ -336,7 +368,11 @@ class Funcao {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(1);
-      bloco = bloco.concat(comando.toString() + "\n");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\n")){
+      bloco = bloco + "\n";
     }
     
     return bloco;
@@ -353,11 +389,13 @@ class ArvoreKarloff {
   }
 
   public String toString() {
-    String bloco = this.main.toString() + "\n";
+    String bloco = "#!/usr/bin python3\n\n" + this.main.toString() + "\n";
     
     for (Funcao funcao : this.funcoes) {
       bloco = bloco.concat(funcao.toString() + "\n");
     }
+
+    bloco = bloco + "if __name__ == \"__main__\":\n\tmain()\n";
     
     return bloco;
   }

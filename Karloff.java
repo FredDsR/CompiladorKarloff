@@ -66,7 +66,23 @@ class FuncaoCall extends Fator{
   }
 
   public String toString() {
-    return this.id + "(" + this.listaExp.toString() +")";
+    String bloco = this.id + "(";
+
+    if (!this.listaExp.isEmpty()) {
+
+      Expressao first = this.listaExp.remove(0);
+      bloco = bloco.concat(first.toString());
+
+      for (Expressao exp : this.listaExp) {
+        bloco = bloco.concat("," + exp.toString());
+      }
+
+      listaExp.add(0, first);
+    }
+
+    bloco = bloco + ")";
+
+    return bloco;
   }
 }
 
@@ -153,7 +169,7 @@ class AtribExp extends Atrib {
   }
 
   public String toString() {
-    return this.getTabs() + this.id + " = " + this.exp.toString();
+    return this.getTabs() + this.id + " = " + this.exp.toString() + "\u005cn";
   }
 }
 
@@ -163,7 +179,7 @@ class AtribInput extends Atrib {
   }
 
   public String toString() {
-    return this.getTabs() + this.id + " = input()";
+    return this.getTabs() + this.id + " = input()\u005cn";
   }
 }
 
@@ -182,7 +198,11 @@ class If extends Comando {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(this.getIndent() + 1);
-      bloco = bloco.concat(comando.toString() + "\u005cn");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\u005cn")){
+      bloco = bloco + "\u005cn";
     }
 
     return bloco;
@@ -203,7 +223,11 @@ class While extends Comando {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(this.getIndent() + 1);
-      bloco = bloco.concat(comando.toString() + "\u005cn");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\u005cn")){
+      bloco = bloco + "\u005cn";
     }
 
     return bloco;
@@ -224,7 +248,11 @@ class Repeat extends Comando {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(this.getIndent() + 1);
-      bloco = bloco.concat(comando.toString() + "\u005cn");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\u005cn")){
+      bloco = bloco + "\u005cn";
     }
 
     return bloco;
@@ -239,7 +267,7 @@ class Return extends Comando {
   }
 
   public String toString() {
-    return this.getTabs() + "return " + this.exp.toString();
+    return this.getTabs() + "return " + this.exp.toString() + "\u005cn";
   }
 }
 
@@ -251,7 +279,7 @@ class Print extends Comando {
   }
 
   public String toString() {
-    return this.getTabs() + "print(" + this.exp.toString() + ")";
+    return this.getTabs() + "print(" + this.exp.toString() + ")\u005cn";
   }
 }
 
@@ -263,7 +291,7 @@ class FuncaoCallCom extends Comando {
   }
 
   public String toString() {
-    return this.getTabs() + this.funcaoCall.toString();
+    return this.getTabs() + this.funcaoCall.toString() + "\u005cn";
   }
 }
 
@@ -277,11 +305,15 @@ class Main {
   }
 
   public String toString() {
-    String bloco = "";
+    String bloco = "def main():\u005cn";
 
     for (Comando comando : this.comandos) {
-      comando.setIndent(0);
-      bloco = bloco.concat(comando.toString() + "\u005cn");
+      comando.setIndent(1);
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\u005cn")){
+      bloco = bloco + "\u005cn";
     }
 
     return bloco;
@@ -336,7 +368,11 @@ class Funcao {
 
     for (Comando comando : this.comandos) {
       comando.setIndent(1);
-      bloco = bloco.concat(comando.toString() + "\u005cn");
+      bloco = bloco.concat(comando.toString());
+    }
+
+    if (!bloco.endsWith("\u005cn")){
+      bloco = bloco + "\u005cn";
     }
 
     return bloco;
@@ -353,11 +389,13 @@ class ArvoreKarloff {
   }
 
   public String toString() {
-    String bloco = this.main.toString() + "\u005cn";
+    String bloco = "#!/usr/bin python3\u005cn\u005cn" + this.main.toString() + "\u005cn";
 
     for (Funcao funcao : this.funcoes) {
       bloco = bloco.concat(funcao.toString() + "\u005cn");
     }
+
+    bloco = bloco + "if __name__ == \u005c"__main__\u005c":\u005cn\u005ctmain()\u005cn";
 
     return bloco;
   }
