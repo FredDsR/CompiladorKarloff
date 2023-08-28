@@ -305,7 +305,7 @@ class Main {
   }
 
   public String toString() {
-    String bloco = "def main():\n";
+    String bloco = "def main() -> None:\n";
     
     for (Comando comando : this.comandos) {
       comando.setIndent(1);
@@ -404,49 +404,38 @@ class ArvoreKarloff {
 public class Karloff {
   public static void main(String args[]) throws Exception {
     FileInputStream fs;
-    String filename = "script.py";
+    String filename = "scripts/script.py";
     
     switch (args.length) {
       case 0:
         throw new Exception("There is no enough params. Template: java Karloff <source_filename.kar> <target_filename.py>");
       case 1:
-        // abrir o arquivo passado por linha
-        // de comando contento o código em Karloff:
         fs = new FileInputStream(new File(args[0]));
         break;
       case 2:
-        // abrir o arquivo passado por linha
-        // de comando contento o código em Karloff:
         fs = new FileInputStream(new File(args[0]));
-        // pega nome do arquivo a ser gerado
         filename = new String(args[1]);
         break;
       default:
         throw new Exception("Too much params. Template: java Karloff <source_filename.kar> <target_filename.py>");
     }
-    // Instanciar o parser da linguagem Karloff passando
-    // como argumento o arquivo contendo o código
-    //Karloff a ser processado:
+    
     Karloff parser = new Karloff(fs);
-    // Chamar a primeira regra do parser que irá
-    // analisar o código e devolver a árvore sintática
+
     ArvoreKarloff arvore = parser.Karloff();
-    // passar a árvore para o gerador de código
-    // que deve gerar um arquivo .java (ou outra linguagem) com o mesmo
-    //nome do arquivo de entrada
+
     geraCodigo(arvore, filename);
   }
 
   public static void geraCodigo(ArvoreKarloff prog, String filename) throws Exception {
-    // System.out.println(filename + "\n\n" + prog.toString());
     File file = new File(filename);
     
     boolean result;  
 
-    result = file.createNewFile();  //creates a new file  
+    result = file.createNewFile();
     
     if(result) {  
-      System.out.println("file created " + file.getCanonicalPath()); //returns the path string  
+      System.out.println("file created " + file.getCanonicalPath());
     } else  {  
       System.out.println("File already exist at location: " + file.getCanonicalPath());  
     }  
