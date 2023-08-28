@@ -1,4 +1,4 @@
-# Compilador JavaCC
+# Compilador Karloff JavaCC
 
 Trabalho desenvolvido na disciplina de Projeto de Compiladores no curso de Ciência da Computação na Universidade Federal de Pelotas (UFPel). 
 
