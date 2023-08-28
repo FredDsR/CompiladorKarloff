@@ -406,6 +406,8 @@ public class Karloff {
     // abrir o arquivo passado por linha
     // de comando contento o código em Karloff:
     FileInputStream fs = new FileInputStream(new File(args[0]));
+    // pega nome do arquivo a ser gerado
+    String filename = new String(args[1]);
     // Instanciar o parser da linguagem Karloff passando
     // como argumento o arquivo contendo o código
     //Karloff a ser processado:
@@ -416,11 +418,11 @@ public class Karloff {
     // passar a árvore para o gerador de código
     // que deve gerar um arquivo .java (ou outra linguagem) com o mesmo
     //nome do arquivo de entrada
-    geraCodigo(arvore, args[0]);
+    geraCodigo(arvore, filename);
   }
 
-  public static void geraCodigo(ArvoreKarloff prog, String arquivo){
-    System.out.println(prog.toString());
+  public static void geraCodigo(ArvoreKarloff prog, String filename){
+    System.out.println(filename + "\n\n" + prog.toString());
   }
 }
 
